@@ -1,0 +1,7 @@
+/.idea/
+/dist/
+/build/
+/venv/
+*.pyc
+/gspread2.egg-info/
+*.json
