@@ -3,6 +3,15 @@ from . import credentials as _credentials
 
 
 class Cell:
+    """Cell within a worksheet.
+
+    Enhanced replacement for gspread's Cell class.
+
+    Attributes:
+        row: Cell Row number
+        column: Cell Column number
+        value: Cell Value. Updating this will instantly reflect on the Google Sheet
+    """
     def __init__(self, worksheet, row, column, value):
         self._worksheet = worksheet
         self.row = row
@@ -10,6 +19,11 @@ class Cell:
         self._value = value
 
     def refresh(self):
+        """Refresh value from worksheet.
+
+        Returns:
+            :class:`Cell` instance
+        """
         return self._worksheet.cell(self.row, self.column)
 
     def as_formula(self):
@@ -31,6 +45,7 @@ class Cell:
 
     @property
     def coordinates(self):
+        """Cell position in worksheet in format: A1"""
         return _gspread_utils.rowcol_to_a1(self.row, self.column)
 
     def __repr__(self):
@@ -38,6 +53,10 @@ class Cell:
 
 
 class Worksheet:
+    """Worksheet class that wraps around gspread's Worksheet class.
+
+    All original functions and attributes are still available.
+    """
     def __init__(self, gspread_worksheet):
         self._worksheet = gspread_worksheet
         self._cells = []
@@ -53,10 +72,12 @@ class Worksheet:
 
     @property
     def name(self):
+        """Worksheet Title"""
         return self._worksheet.title
 
     @property
     def id(self):
+        """Worksheet ID"""
         return self._worksheet.id
 
     def cell(self, *args, value_render_option='FORMATTED_VALUE'):
@@ -74,7 +95,7 @@ class Worksheet:
 class Workbook:
     def __init__(self, url, credentials):
         self.url = url
-        self._client = _credentials.authorize(credentials)
+        self._client = _credentials.get_client(credentials)
         self._workbook = self._client.open_by_url(self.url)
 
     @property
