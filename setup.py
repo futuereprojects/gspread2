@@ -29,9 +29,9 @@ version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
 
 setup(
     name='gspread2',
-    version='0.0.2',
+    version=version,
     packages=['gspread2'],
-    url='https://github.com/futuereprojects/gspread2',
+    url='https://gspread2.readthedocs.io',
     license='MIT',
     author='FutuereProjects',
     author_email='nclark@riseup.net',
