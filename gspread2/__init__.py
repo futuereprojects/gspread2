@@ -5,7 +5,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 __all__ = ['models', 'get_client', 'load_workbook']
 

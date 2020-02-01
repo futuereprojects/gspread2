@@ -39,7 +39,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     python_requires='>=3.6',
-    install_requires=['gspread==3.1.0', 'oauth2client'],
+    install_requires=['gspread==3.2.0', 'oauth2client'],
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",

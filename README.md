@@ -1,6 +1,6 @@
 ![Stage](https://img.shields.io/badge/Stage-BETA-yellow)
 [![PyPI](https://img.shields.io/pypi/v/gspread2)](https://pypi.org/project/gspread2)
-[![gspread](https://img.shields.io/badge/gspread-3.1.0-blue)](https://github.com/burnash/gspread)
+[![gspread](https://img.shields.io/badge/gspread-3.2.0-blue)](https://github.com/burnash/gspread)
 [![Documentation Status](https://readthedocs.org/projects/gspread2/badge/?version=latest)](https://gspread2.readthedocs.io/en/latest/?badge=latest)
 
 
