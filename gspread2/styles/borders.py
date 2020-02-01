@@ -1,5 +1,5 @@
 class Side:
-    def __init__(self, border_style=None, color='FF000000', width=1):
+    def __init__(self, border_style='SOLID', color='FF000000', width=1):
         self._border_style = border_style
         self._color = color
         self._width = width

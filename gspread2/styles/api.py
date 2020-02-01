@@ -1,3 +1,9 @@
+from . import colors
+
+
+__all__ = ['apply_font', 'apply_fill', 'apply_border']
+
+
 def apply_font(cell):
     ws = cell._worksheet
     wb = ws._workbook
@@ -85,5 +91,32 @@ def apply_fill(cell):
     wb.batch_update(req_data)
 
 
-def apply_border(cell):
-    pass
+def apply_border(worksheet, start_row, end_row, start_column, end_column, border):
+    wb = worksheet._workbook
+    data = {
+        'updateBorders': {
+            'range': {
+                'sheetId': worksheet.id,
+                'startRowIndex': start_row - 1,
+                'endRowIndex': end_row,
+                'startColumnIndex': start_column - 1,
+                'endColumnIndex': end_column,
+            }
+        }
+    }
+    for side in ('left', 'right', 'top', 'bottom'):
+        border_side = getattr(border, side)
+        if border_side is not None:
+            border_color = colors.Color(border_side.color)
+            data['updateBorders'][side] = {
+                'style': border_side.border_style,
+                'width': border_side.width,
+                'color': {
+                    'red': border_color.red,
+                    'blue': border_color.blue,
+                    'green': border_color.green,
+                    'alpha': border_color.alpha,
+                }
+            }
+    req_data = {'requests': [data]}
+    wb.batch_update(req_data)

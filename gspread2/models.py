@@ -24,7 +24,6 @@ class Cell:
         self._column = column
         self._value = value
         self._font = None
-        self._border = None
         self._fill = None
         self._alignment = None
 
@@ -37,16 +36,6 @@ class Cell:
         assert isinstance(value, _styles.Font), 'Value must be a Font instance'
         self._font = value
         _styles.api.apply_font(self)
-
-    @property
-    def border(self):
-        return self._border
-
-    @border.setter
-    def border(self, value):
-        assert isinstance(value, _styles.borders.Border), 'Value must be a Border instance'
-        self._border = value
-        # TODO: Update border online
 
     @property
     def fill(self):
@@ -191,8 +180,9 @@ class Worksheet:
         return cells
 
     def apply_border(self, start_row, end_row, start_col, end_col, border):
-        """Available in future release"""
-        raise NotImplementedError('This function is currently unavailable')
+        assert all(isinstance(x, int) for x in (start_row, end_row, start_col, end_col))
+        assert isinstance(border, _styles.borders.Border), 'border must be a Border instance'
+        _styles.api.apply_border(self, start_row, end_row, start_col, end_col, border)
 
 
 class Workbook:

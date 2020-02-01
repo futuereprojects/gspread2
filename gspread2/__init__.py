@@ -5,7 +5,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 
-__version__ = '0.0.3'
+__version__ = '0.1.0'
 
 __all__ = ['models', 'get_client', 'load_workbook']
 
@@ -52,5 +52,4 @@ def load_workbook(url, credentials):
 
 
 def create_workbook(url, credentials):
-    # TODO
     raise NotImplementedError('This feature is not available yet')
