@@ -12,4 +12,7 @@ class Font:
         self.italic = italic
         self.strikethrough = strikethrough
         self.underline = underline
-        self.color = colors.Color(color) if color is not None else None
+        if color is None:
+            self.color = None
+        else:
+            self.color = color if isinstance(color, colors.Color) else colors.Color(color)

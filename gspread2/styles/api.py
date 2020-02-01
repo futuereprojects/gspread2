@@ -31,6 +31,7 @@ def apply_font(cell):
             'blue': color.blue,
             'alpha': color.alpha
         }
+        fields.append('userEnteredFormat.textFormat.foregroundColor')
 
     req_data = {'requests': [
         {
@@ -54,9 +55,35 @@ def apply_font(cell):
     wb.batch_update(req_data)
 
 
-def apply_border(cell):
-    pass
-
-
 def apply_fill(cell):
+    ws = cell._worksheet
+    wb = ws._workbook
+    bg_color = cell.fill
+    json_data = {'backgroundColor': {
+        'red': bg_color.red,
+        'green': bg_color.green,
+        'blue': bg_color.blue,
+        'alpha': bg_color.alpha,
+    }}
+    req_data = {'requests': [
+        {
+            'repeatCell': {
+                'range': {
+                    'sheetId': ws.id,
+                    'startColumnIndex': cell.column - 1,
+                    'endColumnIndex': cell.column,
+                    'startRowIndex': cell.row - 1,
+                    'endRowIndex': cell.row,
+                },
+                'cell': {
+                    'userEnteredFormat': json_data,
+                },
+                'fields': 'userEnteredFormat.backgroundColor',
+            }
+        }
+    ]}
+    wb.batch_update(req_data)
+
+
+def apply_border(cell):
     pass

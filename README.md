@@ -20,7 +20,7 @@ Intended to provide features and syntax similar to [OpenPyXL](https://bitbucket.
 ## Roadmap/TODO
 
 - Documentation (WIP)
-- Colors and Borders
+- Borders
 - Formulas
 - Filters and Pivot Tables
 

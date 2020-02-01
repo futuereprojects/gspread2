@@ -56,7 +56,7 @@ class Cell:
     def fill(self, value):
         assert isinstance(value, _styles.colors.Color), 'Value must be a Color instance'
         self._fill = value
-        # TODO: Update border online
+        _styles.api.apply_fill(self)
 
     @property
     def horizontal_align(self):
