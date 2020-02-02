@@ -27,6 +27,10 @@ class Cell:
         self._fill = None
         self._alignment = None
 
+        self._value_modified = False
+        self._font_modified = False
+        self._fill_modified = False
+
     @property
     def font(self):
         return self._font
@@ -35,7 +39,8 @@ class Cell:
     def font(self, value):
         assert isinstance(value, _styles.Font), 'Value must be a Font instance'
         self._font = value
-        _styles.api.apply_font(self)
+        self._font_modified = True
+        self._worksheet._modified_cells.add(self)
 
     @property
     def fill(self):
@@ -43,9 +48,12 @@ class Cell:
 
     @fill.setter
     def fill(self, value):
+        if isinstance(value, str):
+            value = _styles.colors.Color(value)
         assert isinstance(value, _styles.colors.Color), 'Value must be a Color instance'
         self._fill = value
-        _styles.api.apply_fill(self)
+        self._fill_modified = True
+        self._worksheet._modified_cells.add(self)
 
     @property
     def horizontal_align(self):
@@ -78,7 +86,9 @@ class Cell:
     @value.setter
     def value(self, value):
         self._value = value
-        self._worksheet.update_cell(self.row, self.column, value)
+        self._value_modified = True
+        self._worksheet._modified_cells.add(self)
+        # self._worksheet.update_cell(self.row, self.column, value)
 
     @property
     def row(self):
@@ -112,7 +122,7 @@ class Worksheet:
     def __init__(self, workbook, gspread_worksheet):
         self._workbook = workbook
         self._worksheet = gspread_worksheet
-        self._cells = []
+        self._modified_cells = set()
 
     def __repr__(self):
         return "<Worksheet '%s'>" % self._worksheet.title
@@ -183,6 +193,17 @@ class Worksheet:
         assert all(isinstance(x, int) for x in (start_row, end_row, start_col, end_col))
         assert isinstance(border, _styles.borders.Border), 'border must be a Border instance'
         _styles.api.apply_border(self, start_row, end_row, start_col, end_col, border)
+
+    def update_cells(self):
+        if self._modified_cells:
+            values_modified = [x for x in self._modified_cells if x._value_modified is True]
+            font_modified = [x for x in self._modified_cells if x._font_modified is True]
+            fill_modified = [x for x in self._modified_cells if x._fill_modified is True]
+            f_modified = font_modified + fill_modified
+            if values_modified:
+                self._worksheet.update_cells(values_modified)
+            if f_modified:
+                _styles.api.apply_formatting(self, f_modified)
 
 
 class Workbook:

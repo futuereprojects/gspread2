@@ -9,13 +9,14 @@
 A wrapper around [gspread](https://github.com/burnash/gspread) for easier usage.
 Intended to provide features and syntax similar to [OpenPyXL](https://bitbucket.org/openpyxl/openpyxl).
 
-> DISCLAIMER: This library is still under development!
+> DISCLAIMER: This library is still under development!\
+> Until v1.0.0 is released, assume everything is subject to change.
 
 ## Features
 
 - Cell Formatting such as Fonts, Colors and Borders
 - OpenPyXL functions such as `iter_rows()` and `iter_cols()`
-- Values are automatically applied to the sheet when updated
+- ~~Values are automatically applied to the sheet when updated~~ See Issue #1
 
 ## Roadmap/TODO
 
@@ -103,4 +104,120 @@ To get the first sheet (usually the active one):
 ```python
 workbook = gspread2.load_workbook(URL, CREDENTIALS)
 worksheet = workbook.active
+```
+
+#### Select Cell
+
+You can select cells individually or iterate through columns and rows (other gspread functions are still available such
+ as `worksheet.range()`)
+
+##### Worksheet.cell()
+
+Select an individual cell in the worksheet
+
+```python
+cell = worksheet.cell(1, 2)  # 1st row, 2nd column
+```
+OR
+```python
+cell = worksheet.cell('B1')
+```
+
+##### Worksheet.iter_rows()
+
+Returns a list of lists of cells for each row. This function is the same as found on OpenPyXL. \
+Arguments are as follows:
+- start_row (default: First row)
+- end_row (default: Last row)
+- start_col (default: First column)
+- end_col (default: Last column)
+
+```python
+worksheet.iter_rows(2, 4, 3, 5)
+```
+
+The example above will return:
+
+```python
+[
+    [Cell(C2), Cell(D2), Cell(E2)],
+    [Cell(C3), Cell(D3), Cell(E3)],
+    [Cell(C4), Cell(D4), Cell(E4)],
+]
+```
+
+##### Worksheet.iter_cols()
+
+Returns a list of lists of cells for each column. This function is the same as found on OpenPyXL. \
+Arguments are as follows:
+- start_row (default: First row)
+- end_row (default: Last row)
+- start_col (default: First column)
+- end_col (default: Last column)
+
+```python
+worksheet.iter_cols(2, 4, 3, 5)
+```
+The example above will return:
+
+```python
+[
+    [Cell(C2), Cell(C3), Cell(C4)],
+    [Cell(D2), Cell(D3), Cell(D4)],
+    [Cell(E2), Cell(E3), Cell(E4)],
+]
+```
+
+#### Edit Cells
+
+##### Cell Values
+
+Once you have retrieved your desired cells as shown above, you'll want to update the value.
+On the original `gspread` library, you have to keep track of all the cells you modified and pass them on to 
+`worksheet.update_cells()`. \
+In `gspread2` you do not have to pass on the cells to the function, the library will know what you modified.
+
+```python
+cell = worksheet.cell(1, 1)
+cell.value = 'New Value'
+worksheet.update_cells()
+```
+
+##### Cell Fonts
+
+`gspread` does not provide any formatting features. To apply formatting to a cell, you must initialise a Font instance
+(`gspread2.styles.Font`)
+
+```python
+from gspread2.styles import Font
+
+cell = worksheet.cell(1, 1)
+new_font = Font(
+    name='Arial',
+    size=12,
+    bold=True,
+    italic=True,
+    strikethrough=True,
+    underline=True,
+    color='#FF000000',
+)
+cell.font = new_font
+worksheet.update_cells()
+```
+
+All arguments for `Font` are optional and default to `None`. \
+Arguments with `None` as a value will be untouched on update.
+
+
+##### Cell Fill
+
+To apply a background color to a cell, you must initialise `gspread2.styles.colors.Color`
+and set it to `cell.fill`
+
+```python
+from gspread2.styles.colors import Color
+cell = worksheet.cell(1, 1)
+bg_color Color('#FF000000')
+cell.fill = bg_color
+worksheet.update_cells()
 ```
